@@ -1,0 +1,22 @@
+html,
+body {
+    font-family: sans-serif;
+}
+
+main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 400px;
+    height: 400px;
+    z-index: 9999;
+}
+
+canvas {
+    border: thin solid gray;
+    margin: auto;
+    box-shadow: gray 15px 15px 15px;
+}
