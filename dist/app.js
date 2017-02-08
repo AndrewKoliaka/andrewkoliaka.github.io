@@ -11,23 +11,23 @@ window.onload = function() {
 
 app.grid = (function() {
     var grid = [],
-        GRID_WIDTH = 20,
-        GRID_HEIGHT = 20;
+        COLS = 20,
+        ROWS = 20;
 
     return {
         init: function() {
             var i, j;
-            for (i = 0; i < GRID_HEIGHT; i++) {
+            for (i = 0; i < ROWS; i++) {
                 grid[i] = [];
-                for (j = 0; j < GRID_WIDTH; j++) {
+                for (j = 0; j < COLS; j++) {
                     grid[i][j] = 0;
                 }
             }
         },
         getDimensions: function() {
             return {
-                width: GRID_WIDTH,
-                height: GRID_HEIGHT
+                cols: COLS,
+                rows: ROWS
             }
         },
         getCell: function(i, j) {
@@ -72,12 +72,16 @@ app.grid = (function() {
          score = 0,
          speed = 0,
          gameOver = false,
-         snakeDirection = null;
+         snakeDirection = null,
+         clickAllowed = false;
 
      var fruitColors = ['#65CCA9', '#FF9872', '#FF93FF', '#84C1FF'],
          snakeColors = ['#008080', '#660066', '#323299', '#666666'];
 
      window.onkeydown = function(e) {
+         if (!clickAllowed) {
+             return false
+         }
          switch (e.keyCode) {
              case KEY.RIGHT:
                  if (snakeDirection !== DIRECTION.L) {
@@ -100,13 +104,14 @@ app.grid = (function() {
                  }
                  break;
          }
+         clickAllowed = false;
      }
 
      function init() {
          color.snake = snakeColors[Math.floor(Math.random() * (snakeColors.length - 1))];
          color.fruit = fruitColors[Math.floor(Math.random() * (fruitColors.length - 1))];
          snakeDirection = DIRECTION.R;
-         speed = 9;
+         speed = 10;
          score = 0;
          version = 0;
          gameOver = false;
@@ -141,7 +146,7 @@ app.grid = (function() {
                      break;
              }
 
-             if (hi < 0 || hj < 0 || hi > dim.height - 1 || hj > dim.width - 1 || app.grid.getCell(hi, hj) === CELL.SNAKE) {
+             if (hi < 0 || hj < 0 || hi > dim.rows - 1 || hj > dim.cols - 1 || app.grid.getCell(hi, hj) === CELL.SNAKE) {
                  gameOver = true;
              }
 
@@ -159,9 +164,7 @@ app.grid = (function() {
                  draw();
              } else {
                  app.view.drawCell(app.snake.head.j, app.snake.head.i, color.crash);
-                 if (confirm('Game finished\nyour score: ' + score + '\n try again?')) {
-                     app.controller.start();
-                 }
+                 app.view.confirm(score);
                  return;
              }
 
@@ -172,8 +175,8 @@ app.grid = (function() {
      function draw() {
          var cell_color;
 
-         for (var i = 0; i < dim.height; i++) {
-             for (var j = 0; j < dim.width; j++) {
+         for (var i = 0; i < dim.rows; i++) {
+             for (var j = 0; j < dim.cols; j++) {
                  switch (app.grid.getCell(i, j)) {
                      case CELL.EMPTY:
                          cell_color = color.empty;
@@ -188,6 +191,7 @@ app.grid = (function() {
                  app.view.drawCell(j, i, cell_color);
              }
          }
+         clickAllowed = true;
      }
 
      function setFood() {
@@ -195,8 +199,8 @@ app.grid = (function() {
              randCell;
 
          color.fruit = fruitColors[Math.floor(Math.random() * (fruitColors.length - 1))];
-         for (var i = 0; i < dim.height; i++) {
-             for (var j = 0; j < dim.width; j++) {
+         for (var i = 0; i < dim.rows; i++) {
+             for (var j = 0; j < dim.cols; j++) {
                  if (app.grid.getCell(i, j) === 0) {
                      empties.push({ i: i, j: j });
                  }
@@ -251,7 +255,14 @@ app.view = (function() {
     var canvas = document.getElementsByTagName('canvas')[0],
         ctx = canvas.getContext('2d'),
         CELL_WIDTH = 20,
-        CELL_HEIGHT = 20;
+        CELL_HEIGHT = 20,
+        popup = document.getElementById('popup'),
+        restart_btn = document.getElementById('restart_btn');
+
+    restart_btn.onclick = function() {
+        popup.style.visibility = 'hidden';
+        app.controller.start();
+    }
 
     return {
         clearCanvas: function() {
@@ -263,6 +274,11 @@ app.view = (function() {
         drawCell: function(x, y, color) {
             ctx.fillStyle = color;
             ctx.fillRect(x * CELL_WIDTH, y * CELL_HEIGHT, CELL_WIDTH, CELL_HEIGHT);
+        },
+        confirm: function(score) {
+            document.getElementById('popup_score').textContent = score;
+            document.getElementById('popup').style.visibility = 'visible';
+            restart_btn.focus();
         }
     }
 })();

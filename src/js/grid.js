@@ -1,22 +1,22 @@
 app.grid = (function() {
     var grid = [],
-        GRID_WIDTH = 20,
-        GRID_HEIGHT = 20;
+        COLS = 20,
+        ROWS = 20;
 
     return {
         init: function() {
             var i, j;
-            for (i = 0; i < GRID_HEIGHT; i++) {
+            for (i = 0; i < ROWS; i++) {
                 grid[i] = [];
-                for (j = 0; j < GRID_WIDTH; j++) {
+                for (j = 0; j < COLS; j++) {
                     grid[i][j] = 0;
                 }
             }
         },
         getDimensions: function() {
             return {
-                width: GRID_WIDTH,
-                height: GRID_HEIGHT
+                cols: COLS,
+                rows: ROWS
             }
         },
         getCell: function(i, j) {

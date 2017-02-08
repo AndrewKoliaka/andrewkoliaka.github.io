@@ -16,6 +16,8 @@ gulp.task('serve', () => {
 
 gulp.task('watch', () => {
     gulp.watch('src/js/*.js').on('change', browserSync.reload);
+    gulp.watch('src/index.html').on('change', browserSync.reload);
+    gulp.watch('src/*.css').on('change', browserSync.reload);
 });
 
 gulp.task('js', () => {
@@ -38,7 +40,7 @@ gulp.task('html', () => {
         }))
         .pipe(gulp.dest('./'));
 });
-    
+
 gulp.task('del', () => {
     del(['dist', 'index.html']);
 });

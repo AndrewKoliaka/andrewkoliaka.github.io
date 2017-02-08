@@ -31,12 +31,16 @@
          score = 0,
          speed = 0,
          gameOver = false,
-         snakeDirection = null;
+         snakeDirection = null,
+         clickAllowed = false;
 
      var fruitColors = ['#65CCA9', '#FF9872', '#FF93FF', '#84C1FF'],
          snakeColors = ['#008080', '#660066', '#323299', '#666666'];
 
      window.onkeydown = function(e) {
+         if (!clickAllowed) {
+             return false
+         }
          switch (e.keyCode) {
              case KEY.RIGHT:
                  if (snakeDirection !== DIRECTION.L) {
@@ -59,13 +63,14 @@
                  }
                  break;
          }
+         clickAllowed = false;
      }
 
      function init() {
          color.snake = snakeColors[Math.floor(Math.random() * (snakeColors.length - 1))];
          color.fruit = fruitColors[Math.floor(Math.random() * (fruitColors.length - 1))];
          snakeDirection = DIRECTION.R;
-         speed = 9;
+         speed = 10;
          score = 0;
          version = 0;
          gameOver = false;
@@ -100,7 +105,7 @@
                      break;
              }
 
-             if (hi < 0 || hj < 0 || hi > dim.height - 1 || hj > dim.width - 1 || app.grid.getCell(hi, hj) === CELL.SNAKE) {
+             if (hi < 0 || hj < 0 || hi > dim.rows - 1 || hj > dim.cols - 1 || app.grid.getCell(hi, hj) === CELL.SNAKE) {
                  gameOver = true;
              }
 
@@ -118,9 +123,7 @@
                  draw();
              } else {
                  app.view.drawCell(app.snake.head.j, app.snake.head.i, color.crash);
-                 if (confirm('Game finished\nyour score: ' + score + '\n try again?')) {
-                     app.controller.start();
-                 }
+                 app.view.confirm(score);
                  return;
              }
 
@@ -131,8 +134,8 @@
      function draw() {
          var cell_color;
 
-         for (var i = 0; i < dim.height; i++) {
-             for (var j = 0; j < dim.width; j++) {
+         for (var i = 0; i < dim.rows; i++) {
+             for (var j = 0; j < dim.cols; j++) {
                  switch (app.grid.getCell(i, j)) {
                      case CELL.EMPTY:
                          cell_color = color.empty;
@@ -147,6 +150,7 @@
                  app.view.drawCell(j, i, cell_color);
              }
          }
+         clickAllowed = true;
      }
 
      function setFood() {
@@ -154,8 +158,8 @@
              randCell;
 
          color.fruit = fruitColors[Math.floor(Math.random() * (fruitColors.length - 1))];
-         for (var i = 0; i < dim.height; i++) {
-             for (var j = 0; j < dim.width; j++) {
+         for (var i = 0; i < dim.rows; i++) {
+             for (var j = 0; j < dim.cols; j++) {
                  if (app.grid.getCell(i, j) === 0) {
                      empties.push({ i: i, j: j });
                  }

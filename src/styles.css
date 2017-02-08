@@ -1,6 +1,6 @@
 html,
 body {
-    font-family: sans-serif;
+    font-family: 'Consolas', sans-serif;
 }
 
 main {
@@ -12,11 +12,38 @@ main {
     margin: auto;
     width: 400px;
     height: 400px;
-    z-index: 9999;
 }
 
 canvas {
     border: thin solid gray;
     margin: auto;
     box-shadow: gray 15px 15px 15px;
+}
+
+#popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 200px;
+    height: 100px;
+    opacity: 0.6;
+    background-color: #B7B7B7;
+    text-align: center;
+    display: table;
+    border-radius: 5px;
+    visibility: hidden;
+}
+
+#popup #popup_text {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#popup #popup_text button {
+    margin-top: 5px;
+    width: 100px;
+    height: 30px;
 }
