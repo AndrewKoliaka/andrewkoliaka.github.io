@@ -3,7 +3,7 @@ simple snake game on js, canvas
 
 You can try it [demo](http://andrewkoliaka.github.io/snake)
 
-![](./screen.png)
+<img src="./screen.png" width="500">
 
 ## Quick start
 ```
