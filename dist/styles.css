@@ -1,0 +1,16 @@
+html,
+body {
+    margin: 0;
+}
+
+.battlefield {
+    border: 10px solid orangered;
+}
+
+.battlefield-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vm;
+}
