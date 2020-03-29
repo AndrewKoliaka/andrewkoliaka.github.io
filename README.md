@@ -1,14 +1,25 @@
 # Snake
-simple snake game on js, canvas
+snake game implemented with typescript, canvas
 
-You can try it [demo](http://andrewkoliaka.github.io/snake)
+You can play it [here](http://andrewkoliaka.github.io/snake)
 
-<img src="./screen.png" width="500">
+## Controls
+Use arrow keys to control the snake
 
 ## Quick start
 ```
 git clone https://github.com/AndrewKoliaka/snake.git
 cd snake
 npm install
-gulp
+npm start
 ```
+
+open http://localhost:8000/
+
+## ToDo
+ - add start screen
+ - add ability to pause game
+ - display score
+ - visualize 'crush' state
+ - add build for production task to gulpfile
+ - tests

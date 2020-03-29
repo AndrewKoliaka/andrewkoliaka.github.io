@@ -1,49 +1,65 @@
-const gulp = require('gulp');
-const browserSync = require('browser-sync').create();
-const gulpIf = require('gulp-if');
-const uglify = require('gulp-uglify');
+const { server, reload } = require('gulp-connect');
 const del = require('del');
-const concat = require('gulp-concat');
-const replace = require('gulp-html-replace');
+const browserify = require('browserify');
+const tsify = require('tsify');
+const source = require('vinyl-source-stream');
 
-gulp.task('serve', () => {
-    browserSync.init({
-        server: {
-            baseDir: 'src/'
-        }
+const { parallel, series, watch, src, dest } = require('gulp');
+
+function serve() {
+    return server({
+        root: './',
+        livereload: true,
+        port: 8000
     });
-});
+}
 
-gulp.task('watch', () => {
-    gulp.watch('src/js/*.js').on('change', browserSync.reload);
-    gulp.watch('src/index.html').on('change', browserSync.reload);
-    gulp.watch('src/*.css').on('change', browserSync.reload);
-});
+function startWatch() {
+    watch('src/**/*.ts', ts);
+    watch('src/index.html', html);
+    watch('src/styles.css', styles);
+}
 
-gulp.task('js', () => {
-    gulp.src(['src/js/main.js', 'src/js/grid.js', 'src/js/*.js'])
-        .pipe(concat('app.js'))
-        .pipe(gulp.dest('dist'));
-});
+function ts() {
+    return browserify({
+        basedir: '.',
+        debug: true,
+        entries: ['src/main.ts'],
+        cache: {},
+        packageCache: {}
+    })
+        .plugin(tsify)
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(dest('dist'))
+        .pipe(reload());
+}
 
-gulp.task('css', () => {
-    gulp.src('src/*.css')
-        .pipe(concat('styles.css'))
-        .pipe(gulp.dest('dist'));
-});
+function styles() {
+    return src('src/styles.css')
+        .pipe(dest('dist'))
+        .pipe(reload());
+}
 
-gulp.task('html', () => {
-    gulp.src('src/index.html')
-        .pipe(replace({
-            'css': 'dist/styles.css',
-            'js': 'dist/app.js'
-        }))
-        .pipe(gulp.dest('./'));
-});
+function html() {
+    return src('src/index.html')
+        .pipe(dest('./'))
+        .pipe(reload());
+}
 
-gulp.task('del', () => {
-    del(['dist', 'index.html']);
-});
+function clean() {
+    return del(['dist', 'index.html']);
+}
 
-gulp.task('default', ['serve', 'watch']);
-gulp.task('build', ['js', 'css', 'html']);
+exports.ts = ts;
+exports.clean = clean;
+exports.serve = serve;
+exports.build = series(
+    clean,
+    parallel(ts, styles, html)
+);
+exports.default = series(
+    clean,
+    parallel(ts, styles, html),
+    parallel(serve, startWatch)
+);
