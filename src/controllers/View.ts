@@ -24,6 +24,10 @@ export default class View {
         // todo implement score draw
     }
 
+    static hideStartScreen(): void {
+        (<HTMLElement>document.getElementsByClassName('start-screen')[0]).style.display = 'none';
+    }
+
     private drawCell(coordinate: ICoordinate, type: CELL_TYPE): void {
         this.ctx.fillStyle = COLOR[type] || COLOR[CELL_TYPE.EMPTY];
         this.ctx.fillRect(coordinate.column * CELL_SIZE, coordinate.row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
