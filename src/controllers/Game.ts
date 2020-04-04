@@ -1,4 +1,4 @@
-import { CELL_TYPE, DIRECTION, KEY_CODE, SPEED_INCREASE_INTERVAL, START_SPEED } from "../shared/constants";
+import { CELL_TYPE, DIRECTION, KEY, SPEED_INCREASE_INTERVAL, START_SPEED } from "../shared/constants";
 import Grid from "./Grid";
 import View from "./View";
 import Snake from "./Snake";
@@ -13,6 +13,7 @@ export default class Game {
     private speed: number = START_SPEED;
     private direction: DIRECTION = DIRECTION.RIGHT;
     private isChangeDirectionAllowed: boolean = true;
+    private isPaused: boolean = false;
 
     constructor() {
         this.grid = new Grid();
@@ -25,39 +26,57 @@ export default class Game {
     }
 
     start(): void {
+        this.view.hideStartScreen();
         window.focus();
-        window.requestAnimationFrame(this.startLoop.bind(this))
+        window.requestAnimationFrame(this.startLoop.bind(this));
+    }
+
+    pause(): void {
+        this.isPaused = true;
+        this.view.togglePauseScreen();
+    }
+
+    resume(): void {
+        this.isPaused = false;
+        this.view.togglePauseScreen();
+        window.requestAnimationFrame(this.startLoop.bind(this));
     }
 
     private onKeyDown(event: KeyboardEvent): void {
-        if (!this.isChangeDirectionAllowed) {
-            return;
-        }
-
-        this.isChangeDirectionAllowed = false;
-
-        switch (event.keyCode) {
-            case KEY_CODE.RIGHT:
-                if (this.direction !== DIRECTION.LEFT) {
+        switch (event.key) {
+            case KEY.ARROW_RIGHT:
+                if (this.direction !== DIRECTION.LEFT && this.isChangeDirectionAllowed) {
                     this.direction = DIRECTION.RIGHT;
                 }
                 break;
-            case KEY_CODE.LEFT:
-                if (this.direction !== DIRECTION.RIGHT) {
+            case KEY.ARROW_LEFT:
+                if (this.direction !== DIRECTION.RIGHT && this.isChangeDirectionAllowed) {
                     this.direction = DIRECTION.LEFT;
                 }
                 break;
-            case KEY_CODE.UP:
-                if (this.direction !== DIRECTION.DOWN) {
+            case KEY.ARROW_UP:
+                if (this.direction !== DIRECTION.DOWN && this.isChangeDirectionAllowed) {
                     this.direction = DIRECTION.UP;
                 }
                 break;
-            case KEY_CODE.DOWN:
-                if (this.direction !== DIRECTION.UP) {
+            case KEY.ARROW_DOWN:
+                if (this.direction !== DIRECTION.UP && this.isChangeDirectionAllowed) {
                     this.direction = DIRECTION.DOWN;
                 }
                 break;
+            case KEY.ENTER:
+                if (!this.frame) {
+                    this.start();
+                }
+                break;
+            case KEY.SPACE:
+                if (this.frame) {
+                    this.isPaused ? this.resume() : this.pause();
+                }
+                break;
         }
+
+        this.isChangeDirectionAllowed = false;
     }
 
     private generateApple(): void {
@@ -82,6 +101,10 @@ export default class Game {
     }
 
     private startLoop(): void {
+        if (this.isPaused) {
+            return;
+        }
+
         if (++this.frame % this.speed !== 0) {
             window.requestAnimationFrame(this.startLoop.bind(this));
             return;
@@ -142,4 +165,3 @@ export default class Game {
         return isTouchedBorder || isTouchedHerself;
     }
 }
-

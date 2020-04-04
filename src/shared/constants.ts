@@ -9,11 +9,13 @@ export const START_SNAKE_COORDINATE: ICoordinate = {
     column: 3
 };
 
-export enum KEY_CODE {
-    LEFT = 37,
-    UP = 38,
-    RIGHT = 39,
-    DOWN = 40
+export enum KEY {
+    ARROW_UP = 'ArrowUp',
+    ARROW_RIGHT = 'ArrowRight',
+    ARROW_DOWN = 'ArrowDown',
+    ARROW_LEFT = 'ArrowLeft',
+    ENTER = 'Enter',
+    SPACE = ' '
 }
 
 export enum CELL_TYPE {

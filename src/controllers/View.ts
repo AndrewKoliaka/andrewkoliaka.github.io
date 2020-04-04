@@ -4,8 +4,12 @@ import ICoordinate from "../shared/ICoordinate";
 export default class View {
     private readonly canvas: HTMLCanvasElement;
     private readonly ctx: CanvasRenderingContext2D;
+    private readonly startScreen: HTMLElement;
+    private readonly pauseScreen: HTMLElement;
 
     constructor(private readonly cols: number, private readonly rows: number) {
+        this.startScreen = <HTMLElement>document.getElementsByClassName('popup--start')[0];
+        this.pauseScreen = <HTMLElement>document.getElementsByClassName('popup--pause')[0];
         this.canvas = <HTMLCanvasElement>document.getElementsByClassName('battlefield')[0];
         this.canvas.setAttribute('width', `${this.cols * CELL_SIZE}px`);
         this.canvas.setAttribute('height', `${this.rows * CELL_SIZE}px`);
@@ -24,8 +28,12 @@ export default class View {
         // todo implement score draw
     }
 
-    static hideStartScreen(): void {
-        (<HTMLElement>document.getElementsByClassName('start-screen')[0]).style.display = 'none';
+    hideStartScreen(): void {
+        this.startScreen.style.display = 'none';
+    }
+
+    togglePauseScreen(): void {
+        this.pauseScreen.style.display = this.pauseScreen.style.display === 'flex' ? 'none' : 'flex';
     }
 
     private drawCell(coordinate: ICoordinate, type: CELL_TYPE): void {
