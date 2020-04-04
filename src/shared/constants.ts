@@ -2,7 +2,8 @@ import ICoordinate from "./ICoordinate";
 
 export const CELL_SIZE: number = 20;
 export const GRID_MARGIN: number = 6;
-export const START_SPEED: number = 10;
+export const MIN_SPEED: number = 1;
+export const MAX_SPEED: number = 8;
 export const SPEED_INCREASE_INTERVAL: number = 5;
 export const START_SNAKE_COORDINATE: ICoordinate = {
     row: 3,

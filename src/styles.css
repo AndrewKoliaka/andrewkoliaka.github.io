@@ -5,7 +5,7 @@
 
     --font-size-popup-text: 34px;
 
-    --panel-height: 28px;
+    --panel-height: 22px;
 }
 
 html,
@@ -29,8 +29,16 @@ body {
 
 .panel {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     height: var(--panel-height);
+}
+
+.panel__section {
+    flex-basis: 30%;
+}
+
+.panel__section.panel__section--center {
+    text-align: center;
 }
 
 .battlefield {

@@ -6,10 +6,14 @@ export default class View {
     private readonly ctx: CanvasRenderingContext2D;
     private readonly startScreen: HTMLElement;
     private readonly pauseScreen: HTMLElement;
+    private readonly scoreContainer: HTMLElement;
+    private readonly speedContainer: HTMLElement;
 
     constructor(private readonly cols: number, private readonly rows: number) {
         this.startScreen = <HTMLElement>document.getElementsByClassName('popup--start')[0];
         this.pauseScreen = <HTMLElement>document.getElementsByClassName('popup--pause')[0];
+        this.scoreContainer = <HTMLElement>document.getElementsByClassName('score')[0];
+        this.speedContainer = <HTMLElement>document.getElementsByClassName('speed')[0];
         this.canvas = <HTMLCanvasElement>document.getElementsByClassName('battlefield')[0];
         this.canvas.setAttribute('width', `${this.cols * CELL_SIZE}px`);
         this.canvas.setAttribute('height', `${this.rows * CELL_SIZE}px`);
@@ -25,7 +29,11 @@ export default class View {
     }
 
     updateScore(score: number): void {
-        // todo implement score draw
+        this.scoreContainer.textContent = score.toString();
+    }
+
+    updateSpeed(speed: number): void {
+        this.speedContainer.textContent = speed.toString();
     }
 
     hideStartScreen(): void {

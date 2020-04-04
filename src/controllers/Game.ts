@@ -1,4 +1,4 @@
-import { CELL_TYPE, DIRECTION, KEY, SPEED_INCREASE_INTERVAL, START_SPEED } from "../shared/constants";
+import { CELL_TYPE, DIRECTION, KEY, MAX_SPEED, MIN_SPEED, SPEED_INCREASE_INTERVAL } from "../shared/constants";
 import Grid from "./Grid";
 import View from "./View";
 import Snake from "./Snake";
@@ -10,9 +10,9 @@ export default class Game {
     private readonly snake: Snake;
     private frame: number = 0;
     private score: number = 0;
-    private speed: number = START_SPEED;
+    private speed: number = MIN_SPEED;
     private direction: DIRECTION = DIRECTION.RIGHT;
-    private isChangeDirectionAllowed: boolean = true;
+    private tempDirection: DIRECTION;
     private isPaused: boolean = false;
 
     constructor() {
@@ -45,24 +45,16 @@ export default class Game {
     private onKeyDown(event: KeyboardEvent): void {
         switch (event.key) {
             case KEY.ARROW_RIGHT:
-                if (this.direction !== DIRECTION.LEFT && this.isChangeDirectionAllowed) {
-                    this.direction = DIRECTION.RIGHT;
-                }
+                this.tempDirection = DIRECTION.RIGHT;
                 break;
             case KEY.ARROW_LEFT:
-                if (this.direction !== DIRECTION.RIGHT && this.isChangeDirectionAllowed) {
-                    this.direction = DIRECTION.LEFT;
-                }
+                this.tempDirection = DIRECTION.LEFT;
                 break;
             case KEY.ARROW_UP:
-                if (this.direction !== DIRECTION.DOWN && this.isChangeDirectionAllowed) {
-                    this.direction = DIRECTION.UP;
-                }
+                this.tempDirection = DIRECTION.UP;
                 break;
             case KEY.ARROW_DOWN:
-                if (this.direction !== DIRECTION.UP && this.isChangeDirectionAllowed) {
-                    this.direction = DIRECTION.DOWN;
-                }
+                this.tempDirection = DIRECTION.DOWN;
                 break;
             case KEY.ENTER:
                 if (!this.frame) {
@@ -75,8 +67,6 @@ export default class Game {
                 }
                 break;
         }
-
-        this.isChangeDirectionAllowed = false;
     }
 
     private generateApple(): void {
@@ -105,7 +95,7 @@ export default class Game {
             return;
         }
 
-        if (++this.frame % this.speed !== 0) {
+        if (++this.frame % (MAX_SPEED - this.speed || MIN_SPEED) !== 0) {
             window.requestAnimationFrame(this.startLoop.bind(this));
             return;
         }
@@ -113,7 +103,7 @@ export default class Game {
         let headRow: number = this.snake.head.row;
         let headColumn: number = this.snake.head.column;
 
-        switch (this.direction) {
+        switch (this.getNextDirection()) {
             case DIRECTION.RIGHT:
                 headColumn++;
                 break;
@@ -143,16 +133,41 @@ export default class Game {
         }
 
         this.snake.move({ row: headRow, column: headColumn });
-
         this.view.draw(this.grid.grid);
-        this.isChangeDirectionAllowed = true;
 
         window.requestAnimationFrame(this.startLoop.bind(this));
     }
 
+    private getNextDirection(): DIRECTION {
+        switch (this.tempDirection) {
+            case DIRECTION.RIGHT:
+                if (this.direction !== DIRECTION.LEFT) {
+                    this.direction = DIRECTION.RIGHT;
+                }
+                break;
+            case DIRECTION.LEFT:
+                if (this.direction !== DIRECTION.RIGHT) {
+                    this.direction = DIRECTION.LEFT;
+                }
+                break;
+            case DIRECTION.UP:
+                if (this.direction !== DIRECTION.DOWN) {
+                    this.direction = DIRECTION.UP;
+                }
+                break;
+            case DIRECTION.DOWN:
+                if (this.direction !== DIRECTION.UP) {
+                    this.direction = DIRECTION.DOWN;
+                }
+                break;
+        }
+
+        return this.direction;
+    }
+
     private updateScore(score: number): void {
         if (this.score % SPEED_INCREASE_INTERVAL === 0) {
-            this.speed--;
+            this.view.updateSpeed(++this.speed);
         }
 
         this.view.updateScore(this.score);

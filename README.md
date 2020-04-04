@@ -19,7 +19,7 @@ open http://localhost:8000/
 ## ToDo
  - ~~add start screen~~
  - ~~add ability to pause game~~
- - display score and speed
+ - ~~display score and speed~~
  - visualize 'crush' state
  - add build for production task to gulpfile
  - tests
