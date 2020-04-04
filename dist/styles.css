@@ -1,7 +1,7 @@
 :root {
     --color-start-button: #0057e7;
     --color-start-background: rgba(137,137,137, 0.5);
-    --color-border: #d62d20;
+    --color-border: #000000;
 
     --font-size-popup-text: 34px;
 
@@ -58,7 +58,7 @@ body {
     border: none;
     background: var(--color-start-button);
     font-size: var(--font-size-popup-text);
-    color: white;
+    color: #ffffff;
     cursor: pointer;
 }
 

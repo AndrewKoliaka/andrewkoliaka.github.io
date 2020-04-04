@@ -33,8 +33,8 @@ export enum DIRECTION {
 }
 
 export const COLOR = {
-    [CELL_TYPE.SNAKE]: 'green',
-    [CELL_TYPE.APPLE]: 'red',
-    [CELL_TYPE.CRASH]: 'darkred',
-    [CELL_TYPE.EMPTY]: 'white'
+    [CELL_TYPE.SNAKE]: '#0057e7',
+    [CELL_TYPE.APPLE]: '#d62d20',
+    [CELL_TYPE.CRASH]: '#ffa700',
+    [CELL_TYPE.EMPTY]: '#ffffff'
 };
