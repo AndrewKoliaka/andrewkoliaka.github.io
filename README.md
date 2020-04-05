@@ -20,6 +20,6 @@ open http://localhost:8000/
  - ~~add start screen~~
  - ~~add ability to pause game~~
  - ~~display score and speed~~
+ - ~~add production build~~
  - visualize 'crush' state
- - add build for production task to gulpfile
  - tests

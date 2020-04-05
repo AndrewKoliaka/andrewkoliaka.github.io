@@ -166,11 +166,11 @@ export default class Game {
     }
 
     private updateScore(score: number): void {
-        if (this.score % SPEED_INCREASE_INTERVAL === 0) {
+        if (score % SPEED_INCREASE_INTERVAL === 0) {
             this.view.updateSpeed(++this.speed);
         }
 
-        this.view.updateScore(this.score);
+        this.view.updateScore(score);
     }
 
     private checkGameOver(snakeHead: ICoordinate): boolean {

@@ -15,9 +15,10 @@ export default class View {
         this.scoreContainer = <HTMLElement>document.getElementsByClassName('score')[0];
         this.speedContainer = <HTMLElement>document.getElementsByClassName('speed')[0];
         this.canvas = <HTMLCanvasElement>document.getElementsByClassName('battlefield')[0];
+        this.ctx = <CanvasRenderingContext2D>this.canvas.getContext('2d');
+
         this.canvas.setAttribute('width', `${this.cols * CELL_SIZE}px`);
         this.canvas.setAttribute('height', `${this.rows * CELL_SIZE}px`);
-        this.ctx = this.canvas.getContext('2d');
     }
 
     draw(grid: CELL_TYPE[][]): void {

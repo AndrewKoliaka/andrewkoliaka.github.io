@@ -1,10 +1,12 @@
+const { parallel, series, watch, src, dest } = require('gulp');
 const { server, reload } = require('gulp-connect');
-const del = require('del');
+const { env, noop } = require('gulp-util');
+const inject = require('gulp-inject');
+const htmlmin = require('gulp-htmlmin');
+const source = require('vinyl-source-stream');
 const browserify = require('browserify');
 const tsify = require('tsify');
-const source = require('vinyl-source-stream');
-
-const { parallel, series, watch, src, dest } = require('gulp');
+const del = require('del');
 
 function serve() {
     return server({
@@ -43,6 +45,15 @@ function styles() {
 
 function html() {
     return src('src/index.html')
+        .pipe(env.production ? inject(src('dist/bundle.js'), {
+            startTag: '<!-- inject:js -->',
+            transform: (filepath, file) => `<script>${file.contents.toString()}</script>`
+        }) : noop())
+        .pipe(env.production ? inject(src('dist/styles.css'), {
+            startTag: '<!-- inject:css -->',
+            transform: (filepath, file) => `<style>${file.contents.toString()}</style>`
+        }) : noop())
+        .pipe(env.production ? htmlmin({ collapseWhitespace: true, minifyCSS: true, minifyJS: true }) : noop())
         .pipe(dest('./'))
         .pipe(reload());
 }
@@ -51,13 +62,17 @@ function clean() {
     return del(['dist', 'index.html']);
 }
 
-exports.ts = ts;
 exports.clean = clean;
-exports.serve = serve;
-exports.build = series(
-    clean,
-    parallel(ts, styles, html)
-);
+exports.build = env.production ?
+                series(
+                    clean,
+                    parallel(ts, styles),
+                    html
+                ) :
+                series(
+                    clean,
+                    parallel(ts, styles, html)
+                );
 exports.default = series(
     clean,
     parallel(ts, styles, html),

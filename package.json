@@ -1,10 +1,12 @@
 {
   "name": "snake",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "snake",
   "main": "index.html",
   "scripts": {
-    "start": "gulp"
+    "start": "gulp",
+    "build": "gulp build",
+    "build:production": "gulp build --production"
   },
   "dependencies": {},
   "devDependencies": {
@@ -12,7 +14,11 @@
     "del": "^5.1.0",
     "gulp": "^4.0.2",
     "gulp-connect": "^5.7.0",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-inject": "^5.0.5",
     "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-util": "^3.0.8",
+    "husky": "^4.2.3",
     "tsify": "^4.0.1",
     "typescript": "^3.8.3",
     "vinyl-source-stream": "^2.0.0"
@@ -26,5 +32,10 @@
   "bugs": {
     "url": "https://github.com/AndrewKoliaka/andrewkoliaka.github.io/issues"
   },
-  "homepage": "https://github.com/AndrewKoliaka/andrewkoliaka.github.io#readme"
+  "homepage": "https://github.com/AndrewKoliaka/andrewkoliaka.github.io#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build:production && git add index.html"
+    }
+  }
 }
