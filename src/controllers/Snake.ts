@@ -9,9 +9,7 @@ export default class Snake {
         return this.chain[0];
     }
 
-    constructor(private readonly grid: Grid) {
-        this.chain.push(START_SNAKE_COORDINATE);
-    }
+    constructor(private readonly grid: Grid) {}
 
     eat(coordinate: ICoordinate): void {
         this.chain.unshift(coordinate);
@@ -29,5 +27,9 @@ export default class Snake {
 
         this.grid.setCell(nextCoordinate, CELL_TYPE.EMPTY);
         this.chain.pop();
+    }
+
+    reset(): void {
+        this.chain = [START_SNAKE_COORDINATE];
     }
 }

@@ -21,7 +21,25 @@ export default class Grid {
     constructor() {
         this._cols = Math.round(window.innerWidth / CELL_SIZE) - GRID_MARGIN;
         this._rows = Math.round(window.innerHeight / CELL_SIZE) - GRID_MARGIN;
+    }
 
+    getCell(coordinate: ICoordinate): CELL_TYPE {
+        if (!this.checkCoordinate(coordinate)) {
+            return;
+        }
+
+        return this._grid[coordinate.row][coordinate.column];
+    }
+
+    setCell(coordinate: ICoordinate, type: CELL_TYPE): void {
+        if (!this.checkCoordinate(coordinate)) {
+            return;
+        }
+
+        this._grid[coordinate.row][coordinate.column] = type;
+    }
+
+    reset(): void {
         for (let row: number = 0; row < this._rows; row++) {
             this._grid[row] = [];
 
@@ -31,11 +49,7 @@ export default class Grid {
         }
     }
 
-    getCell(coordinate: ICoordinate): CELL_TYPE {
-        return this._grid[coordinate.row][coordinate.column];
-    }
-
-    setCell(coordinate: ICoordinate, type: CELL_TYPE): void {
-        this._grid[coordinate.row][coordinate.column] = type;
+    private checkCoordinate({ row, column }: ICoordinate): boolean {
+        return row >= 0 && row <= this.rowsQuantity - 1 && column >= 0 && column <= this.columnsQuantity - 1;
     }
 }

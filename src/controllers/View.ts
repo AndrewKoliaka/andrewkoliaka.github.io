@@ -6,14 +6,18 @@ export default class View {
     private readonly ctx: CanvasRenderingContext2D;
     private readonly startScreen: HTMLElement;
     private readonly pauseScreen: HTMLElement;
+    private readonly finalScreen: HTMLElement;
+    private readonly finalScoreContainer: HTMLElement;
     private readonly scoreContainer: HTMLElement;
     private readonly speedContainer: HTMLElement;
 
     constructor(private readonly cols: number, private readonly rows: number) {
         this.startScreen = <HTMLElement>document.getElementsByClassName('popup--start')[0];
         this.pauseScreen = <HTMLElement>document.getElementsByClassName('popup--pause')[0];
-        this.scoreContainer = <HTMLElement>document.getElementsByClassName('score')[0];
-        this.speedContainer = <HTMLElement>document.getElementsByClassName('speed')[0];
+        this.finalScreen = <HTMLElement>document.getElementsByClassName('popup--final')[0];
+        this.finalScoreContainer = <HTMLElement>document.getElementsByClassName('popup__final-score')[0];
+        this.scoreContainer = <HTMLElement>document.getElementsByClassName('panel__score')[0];
+        this.speedContainer = <HTMLElement>document.getElementsByClassName('panel__speed')[0];
         this.canvas = <HTMLCanvasElement>document.getElementsByClassName('battlefield')[0];
         this.ctx = <CanvasRenderingContext2D>this.canvas.getContext('2d');
 
@@ -45,8 +49,17 @@ export default class View {
         this.pauseScreen.style.display = this.pauseScreen.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    private drawCell(coordinate: ICoordinate, type: CELL_TYPE): void {
+    hideFinalScreen(): void {
+        this.finalScreen.style.display = 'none';
+    }
+
+    showFinalScreen(score: number): void {
+        this.finalScoreContainer.textContent = score.toString();
+        this.finalScreen.style.display = 'flex';
+    }
+
+    private drawCell({ row, column }: ICoordinate, type: CELL_TYPE): void {
         this.ctx.fillStyle = COLOR[type] || COLOR[CELL_TYPE.EMPTY];
-        this.ctx.fillRect(coordinate.column * CELL_SIZE, coordinate.row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        this.ctx.fillRect(column * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE);
     };
 }

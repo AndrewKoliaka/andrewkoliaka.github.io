@@ -21,5 +21,5 @@ open http://localhost:8000/
  - ~~add ability to pause game~~
  - ~~display score and speed~~
  - ~~add production build~~
- - visualize 'crush' state
+ - ~~add final screen~~
  - tests

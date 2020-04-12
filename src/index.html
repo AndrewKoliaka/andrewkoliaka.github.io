@@ -15,19 +15,27 @@
     <div class="wrapper">
         <div class="panel">
             <span class="panel__section">
-                score: <span class="score">0</span>
-                speed: <span class="speed">1</span>
+                score: <span class="panel__score">0</span>
+                speed: <span class="panel__speed">1</span>
             </span>
             <span class="panel__section panel__section--center">controls: ↑ ↓ → ← space</span>
             <span class="panel__section"></span>
         </div>
 
         <div class="popup popup--start">
-            <button class="popup__button">START</button>
+            <button class="popup__button popup__button--start">START</button>
         </div>
 
         <div class="popup popup--pause">
-            <span class="popup__text">GAME PAUSED</span>
+            <p class="popup__text">GAME PAUSED</p>
+        </div>
+
+        <div class="popup popup--final">
+            <p class="popup__text">
+                YOUR SCORE: <span class="popup__final-score"></span>
+            </p>
+            <br>
+            <button class="popup__button popup__button--start">Restart</button>
         </div>
 
         <canvas class="battlefield"></canvas>

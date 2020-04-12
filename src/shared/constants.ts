@@ -5,10 +5,6 @@ export const GRID_MARGIN: number = 6;
 export const MIN_SPEED: number = 1;
 export const MAX_SPEED: number = 8;
 export const SPEED_INCREASE_INTERVAL: number = 5;
-export const START_SNAKE_COORDINATE: ICoordinate = {
-    row: 3,
-    column: 3
-};
 
 export enum KEY {
     ARROW_UP = 'ArrowUp',
@@ -22,8 +18,7 @@ export enum KEY {
 export enum CELL_TYPE {
     EMPTY,
     SNAKE,
-    APPLE,
-    CRASH
+    APPLE
 }
 
 export enum DIRECTION {
@@ -36,6 +31,12 @@ export enum DIRECTION {
 export const COLOR = {
     [CELL_TYPE.SNAKE]: '#0057e7',
     [CELL_TYPE.APPLE]: '#d62d20',
-    [CELL_TYPE.CRASH]: '#ffa700',
     [CELL_TYPE.EMPTY]: '#ffffff'
+};
+
+export const START_SPEED: number = MIN_SPEED;
+export const START_DIRECTION: DIRECTION = DIRECTION.RIGHT;
+export const START_SNAKE_COORDINATE: ICoordinate = {
+    row: 3,
+    column: 3
 };

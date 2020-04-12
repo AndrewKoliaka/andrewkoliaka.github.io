@@ -1,4 +1,4 @@
-import { CELL_TYPE, DIRECTION, KEY, MAX_SPEED, MIN_SPEED, SPEED_INCREASE_INTERVAL } from "../shared/constants";
+import { CELL_TYPE, DIRECTION, KEY, MAX_SPEED, MIN_SPEED, SPEED_INCREASE_INTERVAL, START_DIRECTION, START_SPEED } from "../shared/constants";
 import Grid from "./Grid";
 import View from "./View";
 import Snake from "./Snake";
@@ -10,8 +10,8 @@ export default class Game {
     private readonly snake: Snake;
     private frame: number = 0;
     private score: number = 0;
-    private speed: number = MIN_SPEED;
-    private direction: DIRECTION = DIRECTION.RIGHT;
+    private speed: number;
+    private direction: DIRECTION;
     private tempDirection: DIRECTION;
     private isPaused: boolean = false;
 
@@ -21,12 +21,14 @@ export default class Game {
         this.snake = new Snake(this.grid);
 
         window.addEventListener('keydown', this.onKeyDown.bind(this));
-
-        this.generateApple();
     }
 
     start(): void {
         this.view.hideStartScreen();
+        this.view.hideFinalScreen();
+
+        this.reset();
+
         window.focus();
         window.requestAnimationFrame(this.startLoop.bind(this));
     }
@@ -42,19 +44,37 @@ export default class Game {
         window.requestAnimationFrame(this.startLoop.bind(this));
     }
 
-    private onKeyDown(event: KeyboardEvent): void {
-        switch (event.key) {
+    private reset(): void {
+        this.speed = START_SPEED;
+        this.direction = START_DIRECTION;
+        this.tempDirection = undefined;
+
+        this.grid.reset();
+        this.snake.reset();
+        this.generateApple();
+    }
+
+    private onKeyDown({ key }: KeyboardEvent): void {
+        switch (key) {
             case KEY.ARROW_RIGHT:
-                this.tempDirection = DIRECTION.RIGHT;
+                if (!this.isPaused) {
+                    this.tempDirection = DIRECTION.RIGHT;
+                }
                 break;
             case KEY.ARROW_LEFT:
-                this.tempDirection = DIRECTION.LEFT;
+                if (!this.isPaused) {
+                    this.tempDirection = DIRECTION.LEFT;
+                }
                 break;
             case KEY.ARROW_UP:
-                this.tempDirection = DIRECTION.UP;
+                if (!this.isPaused) {
+                    this.tempDirection = DIRECTION.UP;
+                }
                 break;
             case KEY.ARROW_DOWN:
-                this.tempDirection = DIRECTION.DOWN;
+                if (!this.isPaused) {
+                    this.tempDirection = DIRECTION.DOWN;
+                }
                 break;
             case KEY.ENTER:
                 if (!this.frame) {
@@ -119,7 +139,8 @@ export default class Game {
         }
 
         if (this.checkGameOver({ row: headRow, column: headColumn })) {
-            // todo handle game over
+            this.frame = 0;
+            this.view.showFinalScreen(this.score);
 
             return;
         }
